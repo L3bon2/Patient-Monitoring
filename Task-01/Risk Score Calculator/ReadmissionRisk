@@ -1,0 +1,8 @@
+class ReadmissionRiskCalculator(IRiskScoreCalculator):
+    def calculate(self, reading):
+        score = 0
+        if reading.heart_rate > 110:
+            score += 1
+        if reading.temperature > 38:
+            score += 1
+        return score / 2
