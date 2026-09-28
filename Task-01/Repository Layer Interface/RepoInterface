@@ -1,0 +1,11 @@
+from abc import ABC, abstractmethod
+
+
+class IPatientRepository(ABC):
+    @abstractmethod
+    def get_patient(self, patient_id):
+        pass
+
+    @abstractmethod
+    def save_patient(self, patient):
+        pass
