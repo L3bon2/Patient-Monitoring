@@ -1,0 +1,9 @@
+class PatientService:
+    def __init__(self, repo, calculator):
+        self.repo = repo
+        self.calculator = calculator
+
+    def get_risk_score(self, patient_id):
+        patient = self.repo.get_patient(patient_id)
+        reading = patient.latest_reading()
+        return self.calculator.calculate(reading)
