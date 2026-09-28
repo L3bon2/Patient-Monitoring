@@ -1,0 +1,73 @@
+{
+  "pipeline": {
+    "agent": "any",
+    "stages": [
+      {
+        "name": "Install Dependencies",
+        "steps": [
+          {
+            "type": "shell",
+            "command": "pip install -r requirements.txt"
+          }
+        ]
+      },
+      {
+        "name": "Unit Tests",
+        "steps": [
+          {
+            "type": "shell",
+            "command": "pytest --junitxml=reports/unit-tests.xml"
+          }
+        ]
+      },
+      {
+        "name": "Software Composition Analysis",
+        "steps": [
+          {
+            "type": "shell",
+            "command": "bash dependency-check.sh"
+          }
+        ]
+      },
+      {
+        "name": "Static Code Analysis",
+        "steps": [
+          {
+            "type": "shell",
+            "command": "bash bandit.sh"
+          }
+        ]
+      },
+      {
+        "name": "Deploy to Staging",
+        "steps": [
+          {
+            "type": "shell",
+            "command": "docker build -t hospital-app ."
+          },
+          {
+            "type": "shell",
+            "command": "docker run -d -p 8000:8000 hospital-app"
+          }
+        ]
+      },
+      {
+        "name": "Dynamic Security Testing",
+        "steps": [
+          {
+            "type": "shell",
+            "command": "bash zap-scan.sh"
+          }
+        ]
+      }
+    ],
+    "post": {
+      "always": [
+        {
+          "type": "archive",
+          "artifacts": "reports/**"
+        }
+      ]
+    }
+  }
+}
